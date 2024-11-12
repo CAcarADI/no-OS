@@ -47,7 +47,7 @@ int basic_example_main()
 	struct adf4368_dev *dev;
 	int ret;
 
-	pr_info("adf4368_init basic example \n");
+	pr_info("Enter basic example \n");
 
 	ret = adf4368_init(&dev, &adf4368_ip);
 	if (ret)
