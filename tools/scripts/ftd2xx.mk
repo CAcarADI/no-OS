@@ -7,6 +7,9 @@ CFLAGS += -DFT_VER_MAJOR
 CFLAGS += -DFT_VER_MINOR
 CFLAGS += -DFT_VER_BUILD
 
+TARGET = mpsse
+EXTRA_LIBS += libmpsse.a, ftd2xx
+
 INCS += $(NO-OS)/drivers/platform/ftd2xx/mpsse/ftd2xx_platform.h \
         $(NO-OS)/drivers/platform/ftd2xx/mpsse/ftd2xx_uart.h
 
@@ -16,3 +19,5 @@ SRCS += $(NO-OS)/drivers/platform/ftd2xx/mpsse/ftd2xx_platform.c \
 SRC_DIRS += $(NO-OS)/libraries/ftd2xx/release/include   \
             $(NO-OS)/libraries/ftd2xx/release/source    \
             $(NO-OS)/libraries/ftd2xx/release/libftd2xx
+            
+$(PLATFORM)_post_build:
