@@ -25,6 +25,13 @@ ANALOG TO DIGITAL CONVERTERS
    drivers/ad7768-1
    drivers/ad9083
 
+ADC / DAC
+==========
+.. toctree::
+   :maxdepth: 1
+   
+   drivers/ad74416h
+
 AXI CORES
 =========
 .. toctree::
@@ -83,6 +90,7 @@ METER
    :maxdepth: 1
 
    drivers/ade7816
+   drivers/ade7913
 
 RF TRANSCEIVER
 ==============
@@ -129,3 +137,10 @@ POTENTIOMETER
    :maxdepth: 1
 
    drivers/ad5293
+
+ETHERNET
+========
+.. toctree::
+   :maxdepth: 1
+
+   drivers/adin1110

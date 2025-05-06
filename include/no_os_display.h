@@ -1,8 +1,8 @@
-/*******************************************************************************
- *   @file   main.c
- *   @brief  Main file for linux platform of max31827 project.
- *   @author Radu Sabau (radu.sabau@analog.com)
- *******************************************************************************
+/***************************************************************************//**
+ *   @file   no_os_display.h
+ *   @brief  Header file of display utilitary functions
+ *   @author Robert Budai (robert.budai@analog.com)
+********************************************************************************
  * Copyright 2025(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,16 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
-#include "common_data.h"
+*******************************************************************************/
 
-extern int example_main();
+#ifndef _NO_OS_DISPLAY_H_
+#define _NO_OS_DISPLAY_H_
 
-/******************************************************************************
- * @brief Main function execution for FTD2XX platform.
- *
- * @return ret - Result of the enabled examples execution.
- *****************************************************************************/
-int main()
-{
-	return example_main();
-}
+#include <stdint.h>
+
+/**
+ * @brief Converts a 2D array from row-major to column-major format on 8 bits MONOCHROME display
+ */
+int32_t no_os_row_major_to_column_major_8bits(uint8_t *, uint8_t *, int, int);
+
+#endif // _NO_OS_DISPLAY_H_
