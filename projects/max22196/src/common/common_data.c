@@ -62,4 +62,5 @@ struct max22196_init_param max22196_ip = {
 	.comm_param = &max22196_spi_ip,
 	.crc_param = &max22196_crc_ip,
 	.crc_en = false,
+	.chip_id=ID_MAX22196,
 };

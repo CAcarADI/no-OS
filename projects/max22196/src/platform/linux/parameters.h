@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   platform_includes.h
- *   @brief  Includes for used platforms used by max22196 project.
- *   @author Radu Sabau (radu.sabau@analog.com)
+ *   @file   parameters.h
+ *   @brief  Definition of FTD2XX platform data used by max22196 project.
+ *   @author 
 ********************************************************************************
- * Copyright 2023(c) Analog Devices, Inc.
+ * Copyright 2025(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,13 +30,41 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef __PLATFORM_INCLUDES_H__
-#define __PLATFORM_INCLUDES_H__
+#ifndef __PARAMETERS_H__
+#define __PARAMETERS_H__
 
-#ifdef MAXIM_PLATFORM
-#include "maxim/parameters.h"
+#ifdef FTD2XX
+#include "ftd2xx_spi.h"
+#include "ftd2xx_uart.h"
 #else
-#include "linux/parameters.h"
+#include "linux_spi.h"
+#include "linux_uart.h"
 #endif
 
-#endif /* __PLATFORM_INCLUDES_H__ */
+#define UART_IRQ_ID	0
+#define UART_DEVICE_ID	0
+#define UART_BAUDRATE	0
+#define UART_EXTRA      NULL
+
+#ifdef FTD2XX
+extern struct ftd2xx_spi_init max14916_spi_extra;
+#define SPI_EXTRA	&max14916_spi_extra
+#define SPI_OPS		&ftd2xx_spi_ops
+#define UART_OPS	&ftd2xx_uart_ops
+#else
+#define SPI_EXTRA	NULL
+#define SPI_OPS		&linux_spi_ops
+#define UART_OPS	&linux_uart_ops
+#endif
+
+#define SPI_DEVICE_ID	0
+#define SPI_CS		0
+#define SPI_BAUDRATE	100000
+
+//GPIOs
+#define GPIO_CRC_PORT_NUM NULL
+#define GPIO_CRC_PIN_NUM NULL
+#define GPIO_OPS	NULL
+#define GPIO_EXTRA	NULL
+
+#endif  /* __PARAMETERS_H__ */

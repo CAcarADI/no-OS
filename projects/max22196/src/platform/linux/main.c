@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   platform_includes.h
- *   @brief  Includes for used platforms used by max22196 project.
- *   @author Radu Sabau (radu.sabau@analog.com)
+ *   @file   main.c
+ *   @brief  Main file for FTD2XX platform of max22196 project.
+ *   @author 
 ********************************************************************************
- * Copyright 2023(c) Analog Devices, Inc.
+ * Copyright 2025(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,13 +30,27 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef __PLATFORM_INCLUDES_H__
-#define __PLATFORM_INCLUDES_H__
+#include "platform_includes.h"
+#include "common_data.h"
+#include "no_os_error.h"
 
-#ifdef MAXIM_PLATFORM
-#include "maxim/parameters.h"
-#else
-#include "linux/parameters.h"
-#endif
+#include "basic_example.h"
 
-#endif /* __PLATFORM_INCLUDES_H__ */
+int main()
+{
+	int ret = -EINVAL;
+
+	struct no_os_uart_desc *uart_desc;
+
+	ret = no_os_uart_init(&uart_desc, &max22196_uart_ip);
+	if (ret)
+		return ret;
+
+	no_os_uart_stdio(uart_desc);
+
+	ret = basic_example_main();
+
+	no_os_uart_remove(uart_desc);
+
+	return ret;
+}

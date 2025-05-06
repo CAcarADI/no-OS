@@ -2,6 +2,8 @@
 BASIC_EXAMPLE = y
 IIO_EXAMPLE = n
 
+LIBRARIES += ftd2xx
+
 include ../../tools/scripts/generic_variables.mk
 
 include src.mk
