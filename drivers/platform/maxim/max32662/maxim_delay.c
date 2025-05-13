@@ -1,9 +1,9 @@
-/***************************************************************************//**
- *   @file   app_jesd.h
- *   @brief  Application JESD initialization.
- *   @author Cristian Pop (cristian.pop@analog.com)
+/*******************************************************************************
+ *   @file   maxim_delay.c
+ *   @brief  Implementation of maxim delay functions.
+ *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2020(c) Analog Devices, Inc.
+ * Copyright 2022(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,47 +30,59 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef APP_JESD_H_
-#define APP_JESD_H_
+#include "no_os_delay.h"
+#include "no_os_util.h"
+#include "mxc_delay.h"
+#include "mxc_sys.h"
 
-#include <stdint.h>
-#include "no_os_clk.h"
-#include "jesd204_clk.h"
-#include "axi_jesd204_rx.h"
+static volatile unsigned long long _system_ticks = 0;
 
-/**
- * @struct app_jesd_init
- * @brief Structure holding the parameters for app jesd initialization.
- */
-struct app_jesd_init {
-	/* Uscase number */
-	uint8_t uc;
-	/* Lane rate */
-	uint32_t lane_rate_khz;
-};
+extern void SysTick_Handler(void);
+
+/* ************************************************************************** */
+void SysTick_Handler(void)
+{
+	MXC_DelayHandler();
+	_system_ticks++;
+}
 
 /**
- * @struct app_jesd
- * @brief Structure holding jesd app descriptor.
+ * @brief Generate microseconds delay.
+ * @param usecs - Delay in microseconds.
  */
-struct app_jesd {
-	/* rx_jesd */
-	struct axi_jesd204_rx *rx_jesd;
-	/* rx_adxcvr */
-	struct adxcvr *rx_adxcvr;
-	/* rx_jesd_clk */
-	struct jesd204_clk rx_jesd_clk;
-	/* jesd_rx_clk descriptor */
-	struct no_os_clk_desc *jesd_rx_clk_desc;
-};
+void no_os_udelay(uint32_t usecs)
+{
+	MXC_Delay(MXC_DELAY_USEC(usecs));
+}
 
-/* @brief Application JESD initialization. */
-int32_t app_jesd_init(struct app_jesd **app, struct app_jesd_init *init_param);
+/**
+ * @brief Generate miliseconds delay.
+ * @param msecs - Delay in miliseconds.
+ */
+void no_os_mdelay(uint32_t msecs)
+{
+	MXC_Delay(MXC_DELAY_MSEC(msecs));
+}
 
-/* @brief Application JESD remove. */
-int32_t app_jesd_remove(struct app_jesd *app);
+/**
+ * @brief Get current time.
+ * @return Current time structure from system start (seconds, microseconds).
+ */
+struct no_os_time no_os_get_time(void)
+{
+	struct no_os_time t;
+	uint64_t sub_ms;
+	uint32_t systick_val;
+	uint64_t ticks;
 
-/* @brief Application JESD get status. */
-uint32_t app_jesd_status(struct app_jesd *app);
+	SysTick->CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+	systick_val = SysTick->VAL;
+	ticks = _system_ticks;
+	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
 
-#endif
+	sub_ms = ((SysTick->LOAD - systick_val) * 1000) / SysTick->LOAD;
+	t.s = ticks / 1000;
+	t.us = (ticks - t.s * 1000) * 1000 + sub_ms;
+
+	return t;
+}

@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   app_jesd.h
- *   @brief  Application JESD initialization.
- *   @author Cristian Pop (cristian.pop@analog.com)
+ *   @file   maxim_spi.h
+ *   @brief  maxim specific header for SPI driver
+ *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2020(c) Analog Devices, Inc.
+ * Copyright 2022(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,47 +30,42 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef APP_JESD_H_
-#define APP_JESD_H_
+
+#ifndef MAXIM_SPI_H_
+#define MAXIM_SPI_H_
 
 #include <stdint.h>
-#include "no_os_clk.h"
-#include "jesd204_clk.h"
-#include "axi_jesd204_rx.h"
+#include "max32662.h"
+#include "gpio.h"
+#include "no_os_spi.h"
+#include "no_os_dma.h"
 
 /**
- * @struct app_jesd_init
- * @brief Structure holding the parameters for app jesd initialization.
+ * @brief maxim specific SPI platform ops structure
  */
-struct app_jesd_init {
-	/* Uscase number */
-	uint8_t uc;
-	/* Lane rate */
-	uint32_t lane_rate_khz;
+extern const struct no_os_spi_platform_ops max_spi_ops;
+
+enum spi_ss_polarity {
+	SPI_SS_POL_LOW,
+	SPI_SS_POL_HIGH
 };
 
-/**
- * @struct app_jesd
- * @brief Structure holding jesd app descriptor.
- */
-struct app_jesd {
-	/* rx_jesd */
-	struct axi_jesd204_rx *rx_jesd;
-	/* rx_adxcvr */
-	struct adxcvr *rx_adxcvr;
-	/* rx_jesd_clk */
-	struct jesd204_clk rx_jesd_clk;
-	/* jesd_rx_clk descriptor */
-	struct no_os_clk_desc *jesd_rx_clk_desc;
+struct max_spi_init_param {
+	uint32_t num_slaves;
+	enum spi_ss_polarity polarity;
+	mxc_gpio_vssel_t vssel;
+	struct no_os_dma_init_param *dma_param;
+	uint32_t dma_rx_priority;
+	uint32_t dma_tx_priority;
 };
 
-/* @brief Application JESD initialization. */
-int32_t app_jesd_init(struct app_jesd **app, struct app_jesd_init *init_param);
-
-/* @brief Application JESD remove. */
-int32_t app_jesd_remove(struct app_jesd *app);
-
-/* @brief Application JESD get status. */
-uint32_t app_jesd_status(struct app_jesd *app);
+struct max_spi_state {
+	struct max_spi_init_param *init_param;
+	uint32_t cs_delay_first;
+	uint32_t cs_delay_last;
+	struct no_os_dma_desc *dma;
+	uint32_t dma_req_rx;
+	uint32_t dma_req_tx;
+};
 
 #endif

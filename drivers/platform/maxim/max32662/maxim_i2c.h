@@ -1,9 +1,10 @@
-/***************************************************************************//**
- *   @file   app_jesd.h
- *   @brief  Application JESD initialization.
- *   @author Cristian Pop (cristian.pop@analog.com)
+/*******************************************************************************
+ *   @file   maxim_i2c.h
+ *   @brief  Header containing types used in the i2c driver.
+ *   @author Andrei Drimbarean (andrei.drimbarean@analog.com)
+ *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2020(c) Analog Devices, Inc.
+ * Copyright 2022(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,47 +31,49 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef APP_JESD_H_
-#define APP_JESD_H_
+
+#ifndef MAXIM_I2C_H_
+#define MAXIM_I2C_H_
 
 #include <stdint.h>
-#include "no_os_clk.h"
-#include "jesd204_clk.h"
-#include "axi_jesd204_rx.h"
+#include "i2c_regs.h"
+#include "max32662.h"
+#include "gpio.h"
+#include "no_os_i2c.h"
 
 /**
- * @struct app_jesd_init
- * @brief Structure holding the parameters for app jesd initialization.
+ * @struct max_i2c_extra
+ * @brief MAXIM specific I2C handler structure
  */
-struct app_jesd_init {
-	/* Uscase number */
-	uint8_t uc;
-	/* Lane rate */
-	uint32_t lane_rate_khz;
+struct max_i2c_extra {
+	/** Pointer to the abstracted register structure */
+	mxc_i2c_regs_t *handler;
+	/** Pointer to the write data in case of
+	 *  write-repeated start-read operation */
+	uint8_t *prologue_data;
+	/** Size of the write data in case of
+	 *  write-repeated start-read operation */
+	uint8_t prologue_size;
+};
+
+struct max_i2c_init_param {
+	mxc_gpio_vssel_t vssel;
 };
 
 /**
- * @struct app_jesd
- * @brief Structure holding jesd app descriptor.
+ * @enum max_i2c_speed
+ * @brief MAXIM I2C SCL frequency options
  */
-struct app_jesd {
-	/* rx_jesd */
-	struct axi_jesd204_rx *rx_jesd;
-	/* rx_adxcvr */
-	struct adxcvr *rx_adxcvr;
-	/* rx_jesd_clk */
-	struct jesd204_clk rx_jesd_clk;
-	/* jesd_rx_clk descriptor */
-	struct no_os_clk_desc *jesd_rx_clk_desc;
+enum max_i2c_speed {
+	MAX_I2C_STD_MODE = 100000,
+	MAX_I2C_FAST_MODE = 400000,
+	MAX_I2C_FAST_PLUS_MODE = 1000000,
+	MAX_I2C_HS_MODE = 3400000
 };
 
-/* @brief Application JESD initialization. */
-int32_t app_jesd_init(struct app_jesd **app, struct app_jesd_init *init_param);
+/**
+ * @brief MAXIM specific I2C platform ops structure
+ */
+extern const struct no_os_i2c_platform_ops max_i2c_ops;
 
-/* @brief Application JESD remove. */
-int32_t app_jesd_remove(struct app_jesd *app);
-
-/* @brief Application JESD get status. */
-uint32_t app_jesd_status(struct app_jesd *app);
-
-#endif
+#endif /* MAXIM_I2C_H_ */

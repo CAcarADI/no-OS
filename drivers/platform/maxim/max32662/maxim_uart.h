@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   app_jesd.h
- *   @brief  Application JESD initialization.
- *   @author Cristian Pop (cristian.pop@analog.com)
+ *   @file   maxim_uart.h
+ *   @brief  Header file of UART driver.
+ *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2020(c) Analog Devices, Inc.
+ * Copyright 2022(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,47 +30,53 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef APP_JESD_H_
-#define APP_JESD_H_
 
-#include <stdint.h>
-#include "no_os_clk.h"
-#include "jesd204_clk.h"
-#include "axi_jesd204_rx.h"
+#ifndef MAXIM_UART_H_
+#define MAXIM_UART_H_
+
+#include "uart.h"
+#include "no_os_irq.h"
+#include "max32662.h"
+#include "no_os_uart.h"
+#include "gpio.h"
 
 /**
- * @struct app_jesd_init
- * @brief Structure holding the parameters for app jesd initialization.
+ * @brief UART flow control
  */
-struct app_jesd_init {
-	/* Uscase number */
-	uint8_t uc;
-	/* Lane rate */
-	uint32_t lane_rate_khz;
+enum max_uart_flow_ctrl {
+	UART_FLOW_DIS,
+	UART_FLOW_EN
 };
 
 /**
- * @struct app_jesd
- * @brief Structure holding jesd app descriptor.
+ * @brief UART pin mapping select
  */
-struct app_jesd {
-	/* rx_jesd */
-	struct axi_jesd204_rx *rx_jesd;
-	/* rx_adxcvr */
-	struct adxcvr *rx_adxcvr;
-	/* rx_jesd_clk */
-	struct jesd204_clk rx_jesd_clk;
-	/* jesd_rx_clk descriptor */
-	struct no_os_clk_desc *jesd_rx_clk_desc;
+enum max_uart_map {
+	UART_MAP_A,
+	UART_MAP_B,
+	UART_MAP_C,
 };
 
-/* @brief Application JESD initialization. */
-int32_t app_jesd_init(struct app_jesd **app, struct app_jesd_init *init_param);
+/**
+ * @brief Aditional UART config parameters
+ */
+struct max_uart_init_param {
+	enum max_uart_flow_ctrl flow;
+	enum max_uart_map map;
+	mxc_gpio_vssel_t vssel;
+};
 
-/* @brief Application JESD remove. */
-int32_t app_jesd_remove(struct app_jesd *app);
+/**
+ * @brief Platform specific UART state
+ */
+struct max_uart_desc {
+	/** Controller that handles UART interrupts */
+	struct no_os_irq_ctrl_desc *nvic;
+};
 
-/* @brief Application JESD get status. */
-uint32_t app_jesd_status(struct app_jesd *app);
+/**
+ * @brief Maxim specific UART platform ops structure
+ */
+extern const struct no_os_uart_platform_ops max_uart_ops;
 
 #endif

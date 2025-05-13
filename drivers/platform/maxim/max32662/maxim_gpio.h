@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   app_jesd.h
- *   @brief  Application JESD initialization.
- *   @author Cristian Pop (cristian.pop@analog.com)
+ *   @file   maxim_gpio.h
+ *   @brief  Header file for maxim gpio specifics.
+ *   @author Ciprian Regus (ciprian.regus@analog.com)
 ********************************************************************************
- * Copyright 2020(c) Analog Devices, Inc.
+ * Copyright 2022(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,47 +30,31 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef APP_JESD_H_
-#define APP_JESD_H_
+#ifndef MAXIM_GPIO_H_
+#define MAXIM_GPIO_H_
 
+#include <stdbool.h>
 #include <stdint.h>
-#include "no_os_clk.h"
-#include "jesd204_clk.h"
-#include "axi_jesd204_rx.h"
+#include "no_os_irq.h"
+#include "no_os_gpio.h"
+#include "max32662.h"
+#include "gpio.h"
+
+#define N_PINS	MXC_CFG_GPIO_PINS_PORT
+#define N_PORTS	MXC_CFG_GPIO_INSTANCES
 
 /**
- * @struct app_jesd_init
- * @brief Structure holding the parameters for app jesd initialization.
+ * @brief maxim platform specific gpio platform ops structure
  */
-struct app_jesd_init {
-	/* Uscase number */
-	uint8_t uc;
-	/* Lane rate */
-	uint32_t lane_rate_khz;
-};
-
+extern const struct no_os_gpio_platform_ops max_gpio_ops;
 /**
- * @struct app_jesd
- * @brief Structure holding jesd app descriptor.
+ * @brief maxim platform specific gpio irq platform ops structure
  */
-struct app_jesd {
-	/* rx_jesd */
-	struct axi_jesd204_rx *rx_jesd;
-	/* rx_adxcvr */
-	struct adxcvr *rx_adxcvr;
-	/* rx_jesd_clk */
-	struct jesd204_clk rx_jesd_clk;
-	/* jesd_rx_clk descriptor */
-	struct no_os_clk_desc *jesd_rx_clk_desc;
+extern const struct no_os_irq_platform_ops max_gpio_irq_ops;
+
+struct max_gpio_init_param {
+	/** GPIO's voltage level */
+	mxc_gpio_vssel_t vssel;
 };
-
-/* @brief Application JESD initialization. */
-int32_t app_jesd_init(struct app_jesd **app, struct app_jesd_init *init_param);
-
-/* @brief Application JESD remove. */
-int32_t app_jesd_remove(struct app_jesd *app);
-
-/* @brief Application JESD get status. */
-uint32_t app_jesd_status(struct app_jesd *app);
 
 #endif
