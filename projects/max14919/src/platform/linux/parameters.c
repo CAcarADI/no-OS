@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   platform_includes.h
- *   @brief  Includes for used platforms used by max14919 project.
- *   @author Radu Sabau (radu.sabau@analog.com)
+ *   @file   parameters.c
+ *   @brief  Definition of FTD2XX platform data used by max14919 project.
+ *   @author 
 ********************************************************************************
- * Copyright 2024(c) Analog Devices, Inc.
+ * Copyright 2025(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,13 +30,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef __PLATFORM_INCLUDES_H__
-#define __PLATFORM_INCLUDES_H__
+#include "parameters.h"
 
-#ifdef MAXIM_PLATFORM
-#include "maxim/parameters.h"
-#else
-#include "linux/parameters.h"
-#endif
 
-#endif /* __PLATFORM_INCLUDES_H__ */

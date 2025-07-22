@@ -1,9 +1,9 @@
 /***************************************************************************//**
- *   @file   platform_includes.h
- *   @brief  Includes for used platforms used by max14919 project.
- *   @author Radu Sabau (radu.sabau@analog.com)
+ *   @file   parameters.h
+ *   @brief  Definition of FTD2XX platform data used by max14919 project.
+ *   @author 
 ********************************************************************************
- * Copyright 2024(c) Analog Devices, Inc.
+ * Copyright 2025(c) Analog Devices, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,13 +30,32 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
-#ifndef __PLATFORM_INCLUDES_H__
-#define __PLATFORM_INCLUDES_H__
+#ifndef __PARAMETERS_H__
+#define __PARAMETERS_H__
 
-#ifdef MAXIM_PLATFORM
-#include "maxim/parameters.h"
-#else
-#include "linux/parameters.h"
-#endif
+#include "ftd2xx_gpio.h"
+#include "ftd2xx_uart.h"
 
-#endif /* __PLATFORM_INCLUDES_H__ */
+
+
+#define UART_IRQ_ID	0
+#define UART_DEVICE_ID	0
+#define UART_BAUDRATE	0
+#define UART_EXTRA      NULL
+
+#define GPIO_EXTRA      NULL
+#define GPIO_OPS        &ftd2xx_gpio_ops
+#define UART_OPS	&ftd2xx_uart_ops
+
+
+#define GPIO_IN_RUSH_PORT_NUM	0
+#define GPIO_FAULT_PORT_NUM	0
+#define GPIO_REV_PORT_NUM	0
+#define GPIO_IN_PORT_NUM	0
+
+#define GPIO_IN_RUSH_PIN_NUM	7
+#define GPIO_FAULT_PIN_NUM	5
+#define GPIO_REV_PIN_NUM	6
+#define GPIO_IN_PIN_NUM(x)	(x == 0 ? 3 : x == 3 ? 0 : x)
+
+#endif  /* __PARAMETERS_H__ */
