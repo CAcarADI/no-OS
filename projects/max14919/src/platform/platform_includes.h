@@ -1,6 +1,6 @@
 /***************************************************************************//**
  *   @file   platform_includes.h
- *   @brief  Includes for used platforms used by max14919 project.
+ *   @brief  Includes for used platforms used by max14919s project.
  *   @author Radu Sabau (radu.sabau@analog.com)
 ********************************************************************************
  * Copyright 2024(c) Analog Devices, Inc.

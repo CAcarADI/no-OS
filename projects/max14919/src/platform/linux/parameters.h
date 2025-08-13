@@ -37,13 +37,13 @@
 #include "ftd2xx_uart.h"
 
 
-
 #define UART_IRQ_ID	0
 #define UART_DEVICE_ID	0
 #define UART_BAUDRATE	0
 #define UART_EXTRA      NULL
 
-#define GPIO_EXTRA      NULL
+extern struct ftd2xx_gpio_init ftd2xx_extra;
+#define GPIO_EXTRA      &ftd2xx_extra
 #define GPIO_OPS        &ftd2xx_gpio_ops
 #define UART_OPS	&ftd2xx_uart_ops
 

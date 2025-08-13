@@ -32,4 +32,6 @@
 *******************************************************************************/
 #include "parameters.h"
 
-
+struct ftd2xx_gpio_init ftd2xx_extra = {
+	.extra_pins_dir = 0xFF,
+};
